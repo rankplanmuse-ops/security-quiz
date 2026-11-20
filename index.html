@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="data:," />
+<title>Security Awareness Training | Rankplan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;800&family=Oswald:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#00C9FF;
+    --cyan-dark:#00A8D8;
+    --cyan-soft:#E6F8FF;
+    --cyan-mid:#CDEFFB;
+    --ink:#121824;
+    --slate:#2D3748;
+    --grey:#5B6B7C;
+    --grey-light:#9AB0C2;
+    --line:#E2E8F0;
+    --band:#F7FAFC;
+    --white:#FFFFFF;
+    --wrong-bg:#EDF1F5;
+    --wrong-line:#C4D2DE;
+    --radius:28px;
+    --shadow:0 10px 30px rgba(18,24,36,.10), 0 2px 8px rgba(18,24,36,.06);
+    --shadow-sm:0 4px 14px rgba(18,24,36,.08);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Geologica", system-ui, -apple-system, sans-serif;
+    background:var(--band);
+    color:var(--ink);
+    min-height:100dvh;
+  }
+  button{font-family:inherit; cursor:pointer; min-height:48px;}
+  .phone{
+    max-width:430px;
+    margin:0 auto;
+    background:var(--white);
+    min-height:100dvh;
+    position:relative;
+    box-shadow:0 0 0 1px rgba(18,24,36,.06), 0 0 60px rgba(18,24,36,.10);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  @media (min-width:500px){
+    body{padding:28px 12px 40px;}
+    .phone{min-height:860px; border-radius:40px; border:1px solid var(--line);}
+  }
+  .scroll{flex:1; overflow-y:auto; padding:28px 20px 48px; scrollbar-width:none;}
+  .scroll::-webkit-scrollbar{display:none;}
+
+  /* Views */
+  .view{display:none; animation:fadeIn .28s ease both;}
+  .view.active{display:block;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+  @media (prefers-reduced-motion: reduce){ .view{animation:none;} }
+
+  /* Titles */
+  h1.page-title{
+    font-family:"Oswald", sans-serif; font-style:italic; text-transform:uppercase;
+    font-size:40px; line-height:1.04; font-weight:700; letter-spacing:.005em;
+    margin:6px 0 10px; color:var(--ink);
+  }
+  .page-sub{font-size:16px; line-height:1.5; color:var(--grey); font-weight:400; margin:0 0 22px; max-width:34ch;}
+
+  /* Main card */
+  .card{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .hero{position:relative; background:var(--ink); padding:26px 22px 24px; overflow:hidden;}
+  .hero::after{
+    content:""; position:absolute; width:230px; height:230px; border-radius:50%;
+    border:38px solid rgba(0,201,255,.14); right:-84px; top:-96px; pointer-events:none;
+  }
+  .hero img{display:block; width:190px; max-width:72%; height:auto; position:relative; z-index:1;}
+  .hero p{margin:16px 0 0; font-size:14px; line-height:1.5; font-weight:600; color:#C7D3E0; position:relative; z-index:1; max-width:30ch;}
+  .card-body{padding:20px 20px 22px;}
+  .card-head{display:flex; gap:14px; align-items:flex-start;}
+  .icon-circle{
+    width:52px; height:52px; flex:0 0 52px; border-radius:50%;
+    background:var(--cyan-soft); display:grid; place-items:center; color:var(--slate);
+  }
+  .card-title{font-size:21px; font-weight:800; line-height:1.15; margin:2px 0 4px; letter-spacing:-.01em;}
+  .card-meta{font-size:14px; color:var(--grey); font-weight:600; line-height:1.4; margin:0;}
+  .chips{display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 2px;}
+  .chip{
+    font-size:12.5px; font-weight:700; color:var(--slate); background:var(--cyan-soft);
+    padding:7px 11px; border-radius:999px; line-height:1;
+  }
+  .chip.plain{ background:var(--band); color:var(--grey); }
+  .btn-primary{
+    width:100%; border:none; border-radius:5px; background:var(--cyan); color:var(--ink);
+    font-size:17px; font-weight:800; padding:16px 18px; margin-top:18px;
+    box-shadow:0 10px 20px rgba(0,201,255,.28); transition:transform .12s ease, background .15s ease, color .15s ease;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .btn-primary:active{transform:scale(.985); background:var(--ink); color:#fff;}
+  .btn-secondary{
+    width:100%; border:1.5px solid var(--line); border-radius:5px; background:#fff; color:var(--slate);
+    font-size:16px; font-weight:800; padding:15px 18px;
+  }
+
+  .note{
+    margin-top:16px; background:var(--band); border:1px solid var(--line); border-radius:20px;
+    padding:16px 18px; display:flex; gap:12px; align-items:flex-start;
+  }
+  .note-icon{width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:#fff;display:grid;place-items:center;color:var(--slate); box-shadow:var(--shadow-sm);}
+  .note p{margin:0; font-size:14.5px; line-height:1.5; font-weight:600; color:var(--grey);}
+  .note strong{color:var(--ink);}
+
+  .how{margin-top:22px;}
+  .how h2{font-size:17px; font-weight:800; margin:0 0 12px;}
+  .how-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
+  .how-item{background:#FBFDFE; border:1px solid var(--line); border-radius:18px; padding:14px 12px; text-align:left;}
+  .how-item b{display:block; font-size:22px; font-weight:800; color:var(--cyan-dark); line-height:1; margin-bottom:6px;}
+  .how-item span{font-size:12.5px; font-weight:600; color:var(--grey); line-height:1.35; display:block;}
+
+  /* Quiz */
+  .quiz-top{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px;}
+  .back-btn{
+    width:44px;height:44px; min-height:44px; border-radius:50%; border:1px solid var(--line); background:#fff;
+    display:grid; place-items:center; color:var(--ink); flex:0 0 44px; padding:0;
+  }
+  .score-pill{
+    background:var(--cyan-soft); color:var(--slate); font-weight:800; font-size:14px;
+    border-radius:999px; padding:10px 14px; line-height:1; white-space:nowrap;
+  }
+  .progress-label{font-size:14px; font-weight:700; color:var(--grey); margin:0 0 8px;}
+  .progress-label strong{color:var(--ink);}
+  .progress-track{height:10px; background:#EAF0F5; border-radius:999px; overflow:hidden; margin-bottom:16px;}
+  .progress-fill{height:100%; background:var(--cyan); border-radius:999px; transition:width .4s ease; width:0%;}
+
+  .q-card{padding:20px 20px 18px;}
+  .q-cat{font-size:12.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--cyan-dark); margin:0 0 10px;}
+  .q-text{font-size:22px; line-height:1.32; font-weight:800; letter-spacing:-.01em; margin:0;}
+  .answers{display:grid; gap:10px; margin-top:16px;}
+  .answer{
+    width:100%; text-align:left; border:1.5px solid var(--line); background:#fff; border-radius:18px;
+    padding:12px 16px; font-size:16px; font-weight:700; color:var(--ink);
+    display:flex; align-items:center; gap:12px; line-height:1.35; transition:border-color .15s, background .15s;
+  }
+  .answer .letter{
+    width:32px;height:32px;flex:0 0 32px;border-radius:50%; background:#F0F5F9; color:var(--grey);
+    display:grid; place-items:center; font-size:14px; font-weight:800;
+  }
+  .answer .mark{margin-left:auto; flex:0 0 auto; display:none;}
+  .answer:not(:disabled):active{border-color:var(--cyan); background:var(--cyan-soft);}
+  .answer:disabled{cursor:default; opacity:1;}
+  .answer.is-correct{background:var(--ink); border-color:var(--ink); color:#fff;}
+  .answer.is-correct .letter{background:rgba(255,255,255,.22); color:#fff;}
+  .answer.is-correct .mark{display:block; color:var(--cyan);}
+  .answer.is-wrong{background:var(--wrong-bg); border-color:var(--wrong-line); color:#5E7488;}
+  .answer.is-wrong .letter{background:#DCE6EE; color:#5E7488;}
+  .answer.is-wrong .mark{display:block;}
+  .answer.is-dim{opacity:.48;}
+  .fact{
+    display:none; margin-top:14px; background:var(--band); border:1px solid var(--line);
+    border-radius:16px; padding:12px 16px;
+  }
+  .fact.show{display:block; animation:fadeIn .25s ease both;}
+  .fact-label{font-size:12px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--cyan-dark); margin:0 0 4px;}
+  .fact p:last-child{margin:0; font-size:14.5px; line-height:1.5; font-weight:600; color:var(--slate);}
+  .fact-result{font-size:15px; font-weight:800; margin:0 0 6px;}
+  .fact-result.ok{color:var(--slate);}
+  .fact-result.no{color:#5E7488;}
+
+  /* Result */
+  .result-card{
+    border-radius:var(--radius); overflow:hidden; color:#fff;
+    background:linear-gradient(165deg, #2D3748 0%, var(--slate) 30%, #1A2231 68%, var(--ink) 100%);
+    box-shadow:0 18px 36px rgba(18,24,36,.35); padding:28px 24px 26px; position:relative;
+  }
+  .result-card::after{
+    content:""; position:absolute; width:260px; height:260px; border-radius:50%;
+    border:44px solid rgba(0,201,255,.10); right:-90px; top:-90px; pointer-events:none;
+  }
+  .result-label{font-size:14px; font-weight:700; color:rgba(255,255,255,.78); margin:0 0 6px; position:relative; z-index:1;}
+  .result-score{font-family:"Oswald", sans-serif; font-style:italic; font-size:84px; line-height:.95; font-weight:700; letter-spacing:-.01em; margin:0; position:relative; z-index:1;}
+  .result-score small{font-size:34px; font-weight:600; color:rgba(255,255,255,.65);}
+  .result-badge{
+    display:inline-block; margin-top:14px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25);
+    padding:8px 13px; border-radius:999px; font-size:13.5px; font-weight:800; position:relative; z-index:1;
+  }
+  .result-points{margin:16px 0 0; font-size:16px; font-weight:700; line-height:1.45; color:#D9EEFC; position:relative; z-index:1;}
+  .result-msg{font-size:15.5px; line-height:1.55; font-weight:400; color:#C7D3E0; margin:10px 0 0; position:relative; z-index:1; max-width:32ch;}
+  .result-actions{display:grid; gap:11px; margin-top:18px;}
+  .review{margin-top:24px;}
+  .review h2{font-size:18px; font-weight:800; margin:0 0 12px;}
+  .review-item{border:1px solid var(--line); border-radius:18px; padding:14px 16px; margin-bottom:10px; background:#fff;}
+  .review-item .rq{font-size:14.5px; font-weight:800; line-height:1.4; margin:0 0 5px; display:flex; gap:8px;}
+  .review-item .ra{font-size:13.5px; font-weight:600; color:var(--grey); line-height:1.45; margin:0;}
+  .review-item .ra strong{color:var(--slate);}
+  .dot{width:22px;height:22px;flex:0 0 22px;border-radius:50%;display:grid;place-items:center; margin-top:1px;}
+  .dot.ok{background:var(--cyan-soft); color:var(--slate);}
+  .dot.no{background:var(--wrong-bg); color:#5E7488;}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="scroll" id="scrollArea">
+
+    <!-- HUB -->
+    <section class="view active" id="view-hub" aria-label="Training start">
+      <h1 class="page-title">Security Awareness Training</h1>
+      <p class="page-sub">Rankplan internal staff training. Twelve questions on the habits that keep our accounts, our systems and our clients' data safe.</p>
+
+      <article class="card">
+        <div class="hero">
+          <img src="https://rankplan.us/wp-content/uploads/2026/11/rankplan-logo-white-footer-1144.png" alt="Rankplan" />
+          <p>Short, practical and based on the situations that actually reach an agency inbox.</p>
+        </div>
+        <div class="card-body">
+          <div class="card-head">
+            <div class="icon-circle" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"/><path d="M9 11.6l2.1 2.1L15.4 9.4"/></svg>
+            </div>
+            <div>
+              <h2 class="card-title">The security quiz</h2>
+              <p class="card-meta">12 questions · Phishing, passwords, client data, payments</p>
+            </div>
+          </div>
+          <div class="chips" aria-hidden="true">
+            <span class="chip">10 points per answer</span>
+            <span class="chip plain">About 5 minutes</span>
+            <span class="chip">Explanation after each answer</span>
+          </div>
+          <button class="btn-primary" id="btnStart" type="button">
+            Start the training
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </article>
+
+      <div class="note">
+        <div class="note-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16.6v.4"/></svg>
+        </div>
+        <p><strong>Nothing is recorded.</strong> The quiz runs entirely in your browser. No answers, names or scores are collected or sent anywhere.</p>
+      </div>
+
+      <div class="how">
+        <h2>How it works</h2>
+        <div class="how-grid">
+          <div class="how-item"><b>1</b><span>Read the situation and choose the safest answer</span></div>
+          <div class="how-item"><b>2</b><span>See the result at once, with a short explanation</span></div>
+          <div class="how-item"><b>3</b><span>Finish with your score and a full review</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="view" id="view-quiz" aria-label="Quiz question">
+      <div class="quiz-top">
+        <button class="back-btn" id="btnAbort" type="button" aria-label="Stop the training and go back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <span class="score-pill" id="scorePill">0 points</span>
+      </div>
+      <p class="progress-label" id="progressLabel">Question <strong>1 of 12</strong></p>
+      <div class="progress-track" role="progressbar" aria-label="Training progress" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0" id="progressBarWrap">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <article class="card q-card">
+        <p class="q-cat" id="qCat">Phishing</p>
+        <h2 class="q-text" id="qText"></h2>
+        <div class="answers" id="answers" role="group" aria-label="Answers"></div>
+        <div class="fact" id="factBox" aria-live="polite">
+          <p class="fact-result" id="factResult"></p>
+          <p class="fact-label">Why it matters</p>
+          <p id="factText"></p>
+        </div>
+        <button class="btn-primary" id="btnNext" type="button" style="display:none;">Next</button>
+      </article>
+    </section>
+
+    <!-- RESULT -->
+    <section class="view" id="view-result" aria-label="Result">
+      <h1 class="page-title" style="font-size:36px;">Your result</h1>
+      <p class="page-sub" style="margin-bottom:18px;">That completes the training. Here is how you did:</p>
+
+      <article class="result-card">
+        <p class="result-label">Correct answers</p>
+        <p class="result-score"><span id="resultScore">0</span> <small>/ 12</small></p>
+        <span class="result-badge" id="resultBadge">Training complete</span>
+        <p class="result-points" id="resultPoints">You scored 0 of 120 points.</p>
+        <p class="result-msg" id="resultMsg"></p>
+      </article>
+
+      <div class="result-actions">
+        <button class="btn-primary" id="btnAgain" type="button" style="margin-top:0;">Take it again</button>
+        <button class="btn-secondary" id="btnBack" type="button">Back to start</button>
+      </div>
+
+      <div class="review">
+        <h2>Your answers in review</h2>
+        <div id="reviewList"></div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var QUESTIONS = [
+    {
+      cat: "Phishing",
+      q: "An email that appears to be from your bank asks you to click a link and confirm your login details within 24 hours, or your account will be closed. What is the safest response?",
+      answers: [
+        "Click the link quickly, before the account is closed",
+        "Reply to the email and ask if it is genuine",
+        "Do not click. Go to the bank website directly yourself, and report the email as phishing",
+        "Forward it to colleagues so they are warned"
+      ],
+      correct: 2,
+      fact: "Urgency plus a login link is the classic phishing pattern. Banks do not ask for credentials by email. Navigating to the site yourself removes the fake link from the process entirely."
+    },
+    {
+      cat: "Payment fraud",
+      q: "An urgent email that appears to be from a director asks you to pay a supplier invoice today and to keep the payment confidential. What should you do first?",
+      answers: [
+        "Pay it promptly, because the request is urgent",
+        "Verify the request through a separate channel, for example by calling the director on a number you already have",
+        "Reply to the email and ask for confirmation",
+        "Ask the supplier to confirm the invoice by email"
+      ],
+      correct: 1,
+      fact: "CEO fraud works through urgency and secrecy. A reply can go straight back to the fraudster, so no payment moves until the request is confirmed through a channel you already trust."
+    },
+    {
+      cat: "Multi-factor authentication",
+      q: "What does multi-factor authentication (MFA) add on top of a password?",
+      answers: [
+        "It makes the password longer",
+        "It removes the need for a password",
+        "It lets the whole team share one login",
+        "A second proof of identity, such as an app prompt or code, so a stolen password alone is not enough to sign in"
+      ],
+      correct: 3,
+      fact: "Most account takeovers start with a stolen or guessed password. MFA stops them, because the attacker still lacks the second factor. Enable it on email first, then on every work tool that offers it."
+    },
+    {
+      cat: "Passwords",
+      q: "What is the recommended way to handle passwords across your work accounts?",
+      answers: [
+        "Use a password manager, with a unique password for every account",
+        "Use one strong password everywhere, so you can remember it",
+        "Keep the passwords in a shared spreadsheet",
+        "Write them on a note that stays at your desk"
+      ],
+      correct: 0,
+      fact: "When one service leaks a password, attackers try it everywhere else. Unique passwords contain that damage to a single account, and the manager remembers them so you do not have to."
+    },
+    {
+      cat: "Client data and AI tools",
+      q: "A client sends a spreadsheet containing customer names and email addresses. May you paste it into a public AI chatbot to help summarise it?",
+      answers: [
+        "Yes, if you remove the client name first",
+        "Yes, public chatbots are private by default",
+        "No. Client data must never be pasted into public AI tools",
+        "Yes, if the task is urgent"
+      ],
+      correct: 2,
+      fact: "Text pasted into a public AI tool leaves our control and may be stored or reviewed outside any agreement we have with the client. Use only approved tools for client data, and ask before using anything new."
+    },
+    {
+      cat: "Public Wi-Fi",
+      q: "You are working from a cafe on public Wi-Fi and need to open client files. What should you do?",
+      answers: [
+        "Work as normal; cafe Wi-Fi is fine for an hour",
+        "Use the Wi-Fi, but avoid opening email",
+        "Connect through the company VPN before accessing work systems",
+        "Ask the cafe for the Wi-Fi password; with a password it is secure"
+      ],
+      correct: 2,
+      fact: "Public Wi-Fi can be monitored, and fake networks with familiar names are easy to set up. The VPN encrypts everything between your laptop and our systems, wherever you are working from."
+    },
+    {
+      cat: "Updates",
+      q: "Your laptop and browser offer a security update in the middle of a busy day. What is the best action?",
+      answers: [
+        "Postpone it until it stops asking",
+        "Install it promptly, or at the next natural break the same day",
+        "Ignore it; updates mostly add features",
+        "Leave it for a colleague to do next month"
+      ],
+      correct: 1,
+      fact: "Security updates close holes that attackers are often already using. The gap between an update being released and it being installed is one of the easiest ways into a machine."
+    },
+    {
+      cat: "Removable media",
+      q: "You find an unlabelled USB stick in the office car park. What should you do?",
+      answers: [
+        "Plug it into your laptop to see whose it is",
+        "Plug it into a spare computer and check the contents",
+        "Throw it in the bin outside",
+        "Do not plug it in anywhere. Hand it in so it can be dealt with safely"
+      ],
+      correct: 3,
+      fact: "Unknown USB devices are a known delivery route for malware, and they can act the moment they are connected. Handing it in protects every machine in the office, including your own."
+    },
+    {
+      cat: "Screen and desk",
+      q: "You leave your desk to make a coffee during the workday. What should happen to your screen and desk?",
+      answers: [
+        "Lock your screen, and keep sensitive papers out of sight",
+        "Nothing; you will only be a few minutes",
+        "Turn the monitor off; that is enough",
+        "Leave everything open so you can continue quickly"
+      ],
+      correct: 0,
+      fact: "An unlocked screen is an open account: email, files and client systems, available to anyone who sits down. Locking takes a second, and a clear desk keeps client information from being read or taken."
+    },
+    {
+      cat: "Reporting",
+      q: "You clicked a link in an email, and the page that opened does not look right. What should you do?",
+      answers: [
+        "Close the page and say nothing; it is probably fine",
+        "Wait a few days and see whether anything happens",
+        "Report it immediately through the agreed reporting route, even if you are not sure it was malicious",
+        "Mention it only to the colleague sitting next to you"
+      ],
+      correct: 2,
+      fact: "Speed is what limits the damage: passwords can be reset and sessions closed before anything is taken. A false alarm costs a few minutes. A quiet real incident can cost a client."
+    },
+    {
+      cat: "Verifying requests",
+      q: "A long-standing client emails to say their bank details have changed, and asks you to use the new details for the next payment. What is the safe next step?",
+      answers: [
+        "Update the details and process the payment",
+        "Reply to the email asking if it is really them",
+        "Ask another client whether this is normal",
+        "Confirm the change with the client through a second channel, such as a call to the number you already hold for them"
+      ],
+      correct: 3,
+      fact: "Changed bank details are one of the most common payment frauds, and a compromised inbox will happily confirm its own fraud. Verification only counts when it uses contact details you held before the request arrived."
+    },
+    {
+      cat: "Sharing and permissions",
+      q: "A freelancer needs client files for one project. What is the right way to share them?",
+      answers: [
+        "Send a public link, so anyone with the link can open the files",
+        "Share only the files the work needs, with named access, and remove that access when the project ends",
+        "Give access to the whole client drive to save time",
+        "Send the files from your personal email account"
+      ],
+      correct: 1,
+      fact: "Least privilege is simple: people get the access their task requires, and only for as long as it requires it. Public links and standing broad access are how client files end up in the wrong hands."
+    }
+  ];
+
+  var state = { idx: 0, score: 0, answered: false, picks: [] };
+  var letters = ["A", "B", "C", "D"];
+
+  var views = {
+    hub: document.getElementById("view-hub"),
+    quiz: document.getElementById("view-quiz"),
+    result: document.getElementById("view-result")
+  };
+  var scrollArea = document.getElementById("scrollArea");
+  var progressLabel = document.getElementById("progressLabel");
+  var progressFill = document.getElementById("progressFill");
+  var progressBarWrap = document.getElementById("progressBarWrap");
+  var scorePill = document.getElementById("scorePill");
+  var qCat = document.getElementById("qCat");
+  var qText = document.getElementById("qText");
+  var answersEl = document.getElementById("answers");
+  var factBox = document.getElementById("factBox");
+  var factResult = document.getElementById("factResult");
+  var factText = document.getElementById("factText");
+  var btnNext = document.getElementById("btnNext");
+
+  var checkSvg = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>';
+  var crossSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+
+  function show(name){
+    Object.keys(views).forEach(function(k){ views[k].classList.toggle("active", k === name); });
+    scrollArea.scrollTop = 0;
+  }
+
+  function startQuiz(){
+    state = { idx: 0, score: 0, answered: false, picks: [] };
+    show("quiz");
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    var item = QUESTIONS[state.idx];
+    state.answered = false;
+    progressLabel.innerHTML = "Question <strong>" + (state.idx + 1) + " of " + QUESTIONS.length + "</strong>";
+    var pct = Math.round((state.idx / QUESTIONS.length) * 100);
+    progressFill.style.width = pct + "%";
+    progressBarWrap.setAttribute("aria-valuenow", state.idx);
+    scorePill.textContent = (state.score * 10) + " points";
+    qCat.textContent = item.cat;
+    qText.textContent = item.q;
+    factBox.classList.remove("show");
+    btnNext.style.display = "none";
+    answersEl.innerHTML = "";
+    item.answers.forEach(function(text, i){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "answer";
+      b.innerHTML = '<span class="letter">' + letters[i] + '</span><span>' + text + '</span><span class="mark"></span>';
+      b.addEventListener("click", function(){ pick(i, b); });
+      answersEl.appendChild(b);
+    });
+  }
+
+  function pick(i, btn){
+    if (state.answered) return;
+    state.answered = true;
+    var item = QUESTIONS[state.idx];
+    var isRight = i === item.correct;
+    if (isRight) state.score += 1;
+    state.picks.push({ q: item.q, picked: item.answers[i], correctText: item.answers[item.correct], ok: isRight });
+
+    var buttons = answersEl.querySelectorAll(".answer");
+    buttons.forEach(function(b, bi){
+      b.disabled = true;
+      if (bi === item.correct) {
+        b.classList.add("is-correct");
+        b.querySelector(".mark").innerHTML = checkSvg;
+      } else if (bi === i) {
+        b.classList.add("is-wrong");
+        b.querySelector(".mark").innerHTML = crossSvg;
+      } else {
+        b.classList.add("is-dim");
+      }
+    });
+
+    scorePill.textContent = (state.score * 10) + " points";
+    progressFill.style.width = Math.round(((state.idx + 1) / QUESTIONS.length) * 100) + "%";
+    progressBarWrap.setAttribute("aria-valuenow", state.idx + 1);
+
+    factResult.textContent = isRight ? "Correct." : "Not quite. The safest answer is: " + item.answers[item.correct];
+    factResult.className = "fact-result " + (isRight ? "ok" : "no");
+    factText.textContent = item.fact;
+    factBox.classList.add("show");
+    btnNext.textContent = state.idx === QUESTIONS.length - 1 ? "See your result" : "Next";
+    btnNext.style.display = "flex";
+    btnNext.focus({ preventScroll: true });
+    setTimeout(function(){
+      btnNext.scrollIntoView({ behavior: "auto", block: "center" });
+    }, 30);
+  }
+
+  function next(){
+    if (state.idx < QUESTIONS.length - 1) {
+      state.idx += 1;
+      renderQuestion();
+      scrollArea.scrollTop = 0;
+    } else {
+      showResult();
+    }
+  }
+
+  function badgeFor(score){
+    if (score === 12) return "Full marks";
+    if (score >= 10) return "Training passed, strong";
+    if (score >= 8) return "Training passed";
+    if (score >= 5) return "Retake recommended";
+    return "Retake required";
+  }
+  function msgFor(score){
+    if (score === 12) return "Every risk in this set, recognised. Keep the same habits in the daily work; they are what protect the agency and its clients.";
+    if (score >= 10) return "A strong result. The review below shows the one or two points worth tightening up.";
+    if (score >= 8) return "A solid pass. Read the explanations for the questions you missed and apply those points from today.";
+    if (score >= 5) return "Partly there. Work through the review below, then take the training again while it is fresh.";
+    return "This needs attention before it counts as complete. Read the review below carefully and take the training again.";
+  }
+
+  function showResult(){
+    document.getElementById("resultScore").textContent = state.score;
+    document.getElementById("resultBadge").textContent = badgeFor(state.score);
+    document.getElementById("resultPoints").textContent = "You scored " + (state.score * 10) + " of 120 points.";
+    document.getElementById("resultMsg").textContent = msgFor(state.score);
+    var list = document.getElementById("reviewList");
+    list.innerHTML = "";
+    state.picks.forEach(function(p, i){
+      var div = document.createElement("div");
+      div.className = "review-item";
+      var dot = p.ok
+        ? '<span class="dot ok"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></span>'
+        : '<span class="dot no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span>';
+      var answerLine = p.ok
+        ? 'Your answer: <strong>' + p.picked + '</strong>'
+        : 'Your answer: ' + p.picked + ' · Safest answer: <strong>' + p.correctText + '</strong>';
+      div.innerHTML = '<p class="rq">' + dot + '<span>' + (i + 1) + '. ' + p.q + '</span></p><p class="ra">' + answerLine + '</p>';
+      list.appendChild(div);
+    });
+    show("result");
+  }
+
+  document.getElementById("btnStart").addEventListener("click", startQuiz);
+  document.getElementById("btnAgain").addEventListener("click", startQuiz);
+  document.getElementById("btnBack").addEventListener("click", function(){ show("hub"); });
+  document.getElementById("btnAbort").addEventListener("click", function(){ show("hub"); });
+  btnNext.addEventListener("click", next);
+})();
+</script>
+</body>
+</html>
